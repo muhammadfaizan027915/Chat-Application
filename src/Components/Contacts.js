@@ -8,8 +8,6 @@ const Contacts = ({
   selectedContact,
   setSelectedContact,
   onlineUsers,
-  setOnlineUsers,
-  socket,
 }) => {
   useEffect(() => {
     if (user) {

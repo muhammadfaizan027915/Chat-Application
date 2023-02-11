@@ -368,6 +368,11 @@ ul {
     box-shadow: none;
 }
 
-.chat-box::-webkit-scrollbar{
+.chatContainerScroll::-webkit-scrollbar{
     display: none;
+}
+
+.chatContainerScroll{
+    height: 65vh; 
+    overflow: auto;
 }
