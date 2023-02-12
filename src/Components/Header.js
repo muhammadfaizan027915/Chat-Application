@@ -6,7 +6,7 @@ const Header = ({ user, setUser, open, socket }) => {
     logout().then(() => {
       setUser(null);
       open(true);
-      socket.emit("logout", user._id);
+      socket.emit("logout");
     });
   };
 

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { signUp } from "../Api/api";
 
-const Signup = ({ open, haveAccount, setUser, socket}) => {
+const Signup = ({ open, haveAccount, setUser,}) => {
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -19,7 +19,7 @@ const Signup = ({ open, haveAccount, setUser, socket}) => {
       .then((data) => {
         setUser(data.user);
         open(false);
-
+        window.location.reload();
       })
       .catch((error) => setError(error?.response?.data?.message));
   };
@@ -92,7 +92,7 @@ const Signup = ({ open, haveAccount, setUser, socket}) => {
         />
       </div>
       <p className="mt-2">
-        Aleary have an account:{" "}
+        Already have an account:{" "}
         <a
           style={{
             textDecoration: "underline",

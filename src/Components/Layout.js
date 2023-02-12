@@ -6,7 +6,7 @@ import Modal from "react-modal";
 import Signup from "./Signup";
 import Login from "./Login";
 import { getUser } from "../Api/api";
-import { io, Socket } from "socket.io-client";
+import { io } from "socket.io-client";
 
 const customStyles = {
   content: {
@@ -29,7 +29,7 @@ const Layout = () => {
   const [onlineUsers, setOnlineUsers] = useState(null);
 
   useEffect(() => {
-    setSocket(io("http://localhost:4000"));
+    setSocket(io.connect("http://localhost:4000"));
     getUser()
       .then((data) => {
         setUser(data.user);
@@ -43,8 +43,17 @@ const Layout = () => {
     if (!user) {
       setContacts(null);
       setSelectedContact(null);
+      setOnlineUsers(null);
     }
+    socket?.emit("register", user?._id);
   }, [user]);
+
+  useEffect(() => {
+    if (user)
+      socket?.on("active", (users) => {
+        setOnlineUsers(users);
+      });
+  }, [socket, user]);
 
   return (
     <>

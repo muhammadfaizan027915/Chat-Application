@@ -10,7 +10,7 @@ const Login = ({ open, haveAccount, setUser, socket }) => {
       .then((data) => {
         setUser(data.user);
         open(false);
-        socket?.emit("user", data.user?._id);
+        window.location.reload();
       })
       .catch((error) => setError(error?.response?.data?.message));
   };
