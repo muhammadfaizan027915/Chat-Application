@@ -24,7 +24,7 @@ const Layout = () => {
   const [isOpen, setOpen] = useState(false);
   const [haveAccount, setHaveAccount] = useState(true);
   const [selectedContact, setSelectedContact] = useState(null);
-  const [messages, setMessages] = useState(null);
+  const [messages, setMessages] = useState([]);
   const [socket, setSocket] = useState(null);
   const [onlineUsers, setOnlineUsers] = useState(null);
 
@@ -81,6 +81,7 @@ const Layout = () => {
                   setMessages={setMessages}
                   selectedContact={selectedContact}
                   user={user}
+                  socket={socket}
                 />
               </div>
             </div>

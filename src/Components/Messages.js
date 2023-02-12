@@ -11,6 +11,7 @@ const Messages = ({
   setMessages,
   selectedContact,
   user,
+  socket,
 }) => {
   const timeAgo = new TimeAgo("en-US");
   const [conversationId, setConversationId] = useState(null);
@@ -25,21 +26,36 @@ const Messages = ({
       .catch((err) => setMessages(null));
   }, [selectedContact, setMessages]);
 
+  useEffect(() => {
+    if (user)
+      socket.on("sendmessage", (message) => {
+        if (message.sender._id === selectedContact)
+          setMessages((prev) => {
+            if (!prev.length) return [message];
+            return [...prev, message];
+          });
+      });
+  }, [user, socket, selectedContact, setMessages]);
+
   const getContact = (contacts, id) => {
     if (!contacts) return;
     return contacts.find((contact) => contact._id === id);
   };
 
   const handleClick = () => {
-    if (text.length)
+    if (text.length) {
       sendMessage(text, user._id, conversationId, selectedContact)
         .then((data) => {
-          setMessages((prev) => [...prev, data?.message]);
+          setMessages((prev) => {
+            if (!prev.length) return [data?.message];
+            return [...prev, data?.message];
+          });
           setText("");
           const elem = document.querySelector(".chat-box");
           elem.scrollTop = elem.scrollHeight;
         })
         .catch((err) => console.log(err));
+    }
   };
 
   return (
@@ -86,7 +102,7 @@ const Messages = ({
                                 : "https://th.bing.com/th/id/R.945f33b643f2ceffcdae90fb57c61854?rik=XcI0SYBgSefoCA&riu=http%3a%2f%2fgetdrawings.com%2ffree-icon-bw%2fanonymous-avatar-icon-19.png&ehk=5n%2buJG66CeLQZsmhaMt8gag5rXuM3TdebAL6W35K1E4%3d&risl=&pid=ImgRaw&r=0"
                             }
                             style={{ width: "30px", height: "30px" }}
-                            alt="Retail Admin"
+                            alt={message?.sender?.name}
                           />
                           <div
                             className="chat-name"
