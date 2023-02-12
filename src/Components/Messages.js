@@ -31,7 +31,7 @@ const Messages = ({
       socket.on("sendmessage", (message) => {
         if (message.sender._id === selectedContact)
           setMessages((prev) => {
-            if (!prev.length) return [message];
+            if (!prev?.length) return [message];
             return [...prev, message];
           });
       });
@@ -47,7 +47,7 @@ const Messages = ({
       sendMessage(text, user._id, conversationId, selectedContact)
         .then((data) => {
           setMessages((prev) => {
-            if (!prev.length) return [data?.message];
+            if (!prev?.length) return [data?.message];
             return [...prev, data?.message];
           });
           setText("");

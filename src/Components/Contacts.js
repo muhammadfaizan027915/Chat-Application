@@ -32,7 +32,7 @@ const Contacts = ({
         </div>
       </div>
       <ul className="users" style={{ height: "65vh", overflow: "auto" }}>
-        {contacts ? (
+        {contacts && contacts?.length ? (
           contacts.map((contact) => (
             <li
               className={
