@@ -58,11 +58,15 @@ const Messages = ({
 
   // Add new Messages to message array
   useEffect(() => {
-    if (message?.sender?._id === selectedContact)
+    if (message?.sender?._id === selectedContact){
       setMessages((prev) => {
         if (!prev?.length) return [message];
         return [...prev, message];
       });
+
+      socket.emit("updatestatus", conversationId, selectedContact)
+    }
+      
   }, [message]);
 
   const getContact = (contacts, id) => {
