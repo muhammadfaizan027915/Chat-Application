@@ -32,9 +32,9 @@ export const logout = () => {
   return api.post("/logout").then((response) => response.data);
 };
 
-export const getMessages = (reciever) => {
+export const getMessages = (sender) => {
   return api
-    .get("/messages", { params: reciever })
+    .get("/messages", { params: sender })
     .then((response) => response.data);
 };
 

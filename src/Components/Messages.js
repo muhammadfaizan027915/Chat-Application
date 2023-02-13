@@ -2,8 +2,12 @@ import React, { useEffect, useState } from "react";
 import { getMessages, sendMessage } from "../Api/api";
 import ScrollToBottom from "react-scroll-to-bottom";
 import TimeAgo from "javascript-time-ago";
-import en from "javascript-time-ago/locale/en";
+import ReactTimeAgo from "react-time-ago";
+import en from "javascript-time-ago/locale/en.json";
+import ru from "javascript-time-ago/locale/ru.json";
+
 TimeAgo.addDefaultLocale(en);
+TimeAgo.addLocale(ru);
 
 const Messages = ({
   contacts,
@@ -16,9 +20,11 @@ const Messages = ({
   const timeAgo = new TimeAgo("en-US");
   const [conversationId, setConversationId] = useState(null);
   const [text, setText] = useState("");
+  const [message, setMessage] = useState(null);
 
+  // Get messages
   useEffect(() => {
-    getMessages({ reciever: selectedContact })
+    getMessages({ sender: selectedContact })
       .then((data) => {
         setMessages(data.messages);
         setConversationId(data.conversationId);
@@ -26,16 +32,38 @@ const Messages = ({
       .catch((err) => setMessages(null));
   }, [selectedContact, setMessages]);
 
+  // Socket funcions
   useEffect(() => {
-    if (user)
+    if (user) {
       socket.on("sendmessage", (message) => {
-        if (message.sender._id === selectedContact)
-          setMessages((prev) => {
-            if (!prev?.length) return [message];
-            return [...prev, message];
-          });
+        setMessage(message);
       });
+
+      socket.on("updatestatus", (sender) => {
+        setMessages((prev) => {
+          return prev?.map((message) => {
+            if (message?.sender._id === sender && message?.seen === false) {
+              return {
+                ...message,
+                sender: { ...message.sender },
+                seen: true,
+              };
+            }
+            return message;
+          });
+        });
+      });
+    }
   }, [user, socket, selectedContact, setMessages]);
+
+  // Add new Messages to message array
+  useEffect(() => {
+    if (message?.sender?._id === selectedContact)
+      setMessages((prev) => {
+        if (!prev?.length) return [message];
+        return [...prev, message];
+      });
+  }, [message]);
 
   const getContact = (contacts, id) => {
     if (!contacts) return;
@@ -51,8 +79,6 @@ const Messages = ({
             return [...prev, data?.message];
           });
           setText("");
-          const elem = document.querySelector(".chat-box");
-          elem.scrollTop = elem.scrollHeight;
         })
         .catch((err) => console.log(err));
     }
@@ -124,8 +150,16 @@ const Messages = ({
                         </div>
                       </div>
                       <div className="chat-hour ml-2">
-                        {timeAgo.format(new Date(message?.createdAt))}{" "}
-                        <span className="fa fa-check-circle ml-1"></span>
+                        <ReactTimeAgo
+                          date={message?.createdAt}
+                          locale="en-US"
+                        />{" "}
+                        {message?.sender?._id === user?._id &&
+                        message?.seen === true ? (
+                          <span className="fa fa-check-circle ml-1"></span>
+                        ) : (
+                          ""
+                        )}
                       </div>
                     </li>
                   ))
