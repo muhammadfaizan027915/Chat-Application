@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { signUp } from "../Api/api";
 
-const Signup = ({ open, haveAccount, setUser,}) => {
+const Signup = ({ open, haveAccount, setUser }) => {
   const [form, setForm] = useState({
     name: "",
     email: "",
     username: "",
+    password: "",
     imagelink: "",
   });
   const [error, setError] = useState("");
@@ -15,7 +16,7 @@ const Signup = ({ open, haveAccount, setUser,}) => {
   };
 
   const register = () => {
-    signUp(form.name, form.email, form.username, form.imagelink)
+    signUp(form.name, form.email, form.username, form.password, form.imagelink)
       .then((data) => {
         setUser(data.user);
         open(false);
@@ -74,6 +75,20 @@ const Signup = ({ open, haveAccount, setUser,}) => {
           name="username"
           placeholder="Enter your username"
           value={form?.username}
+          onChange={handleChange}
+        />
+      </div>
+      <div className="mb-2">
+        <label htmlFor="password" className="form-label">
+          Password
+        </label>
+        <input
+          type="password"
+          className="form-control"
+          id="password"
+          name="password"
+          placeholder="Enter your password"
+          value={form?.password}
           onChange={handleChange}
         />
       </div>

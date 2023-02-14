@@ -6,18 +6,20 @@ const api = axios.create({
   headers: { "Access-Control-Allow-Credentials": true },
 });
 
-export const signUp = (name, email, username, imagelink) => {
+export const signUp = (name, email, username, password, imagelink) => {
   return api
-    .post("/signup", { name, email, username, imagelink })
+    .post("/signup", { name, email, username, password, imagelink })
     .then((response) => {
       return response.data;
     });
 };
 
-export const logIn = (username) => {
-  return api.post("/login", {}, { params: { username } }).then((response) => {
-    return response.data;
-  });
+export const logIn = (username, password) => {
+  return api
+    .post("/login", {}, { params: { username, password } })
+    .then((response) => {
+      return response.data;
+    });
 };
 
 export const getUser = () => {

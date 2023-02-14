@@ -3,10 +3,11 @@ import { logIn } from "../Api/api";
 
 const Login = ({ open, haveAccount, setUser, socket }) => {
   const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
   const handleClick = () => {
-    logIn(username)
+    logIn(username, password)
       .then((data) => {
         setUser(data.user);
         open(false);
@@ -37,6 +38,20 @@ const Login = ({ open, haveAccount, setUser, socket }) => {
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           placeholder="Enter your username"
+        />
+      </div>
+      <div className="mb-2">
+        <label htmlFor="password" className="form-label">
+          Password
+        </label>
+        <input
+          type="password"
+          className="form-control"
+          id="password"
+          name="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="Enter your password"
         />
       </div>
       <p className="mt-2">
